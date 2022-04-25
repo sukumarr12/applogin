@@ -1,52 +1,59 @@
 pipeline {
-    agent any //{label "my-agent"}
+    agent any
+
     stages {
-        stage ("git clone") {
+        
+        stage('git clone') {
             steps {
-                git url: 'https://github.com/tejesh555/applogin.git'
+                git credentialsId: 'githubid', url: 'https://github.com/sukumarr12/applogin.git'       
             }
         }
-        stage ("build") {
-            steps { 
+
+        stage('build') {
+            steps {
                 sh "mvn clean install"
             }
         }
-        stage ("test") {
+
+        stage('test') {
             steps {
-                script {
-                    def scannerHome = tool 'myscanner';
-                    withSonarQubeEnv('mysonar') {
-                    sh "${scannerHome}/bin/sonar-scanner \
-                    -D sonar.login=admin \
-                    -D sonar.password=password \
-                    -D sonar.projectKey=applogin \
-                    -D sonar.exclusions=vendor/**,resources/**,**/*.java \
-                    -D sonar.host.url=http://35.174.115.121:9000/"
-                    }
-                }
+                echo "this is for testing"
             }
         }
-        stage ("publish") {
+
+        stage('publish') {
             steps {
-                script {
-                  /*  rtUpload (
-                        serverId: 'my-jfrog',
-                        spec: '''
-                            {
-                                "files": [
-                                    {
-                                        "pattern": "target/*.war",
-                                        "target": "applogin"
-                                    }
-                                ]
-                            }
-                        ''',
-                        buildName: "${JOB_NAME}",
-                        buildNumber: "${BUILD_NUMBER}"
-                    ) */
-                    println "piublish"
-                }
+                rtUpload (
+                    serverId: 'myjfrog',
+                    spec: '''
+                          {
+                              "files": [
+                                  {
+                                      "pattern": "target/*.war",
+                                      "target": "firstrepo/"
+                                  }
+                              ]
+                          }
+                    ''',
+                    buildName: "${JOB_NAME}",
+                    buildNumber: "${BUILD_NUMBER}"
+                )
             }
         }
+
+        stage('deploy') {
+            steps {
+                echo "ansible-playbook -i inventory e2e.yml"
+            }
+        }
+    }
+
+    post {
+        always {
+            emailext body: '''this is status of
+
+job:"$(JOB_NAME)"
+url:"$(BUILD_URL)"''', subject: 'status of "$(JOB_NAME)"', to: 'devops.sukumar@gmail.com'
+       }
     }
 }
