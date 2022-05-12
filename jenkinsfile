@@ -7,14 +7,8 @@ pipeline {
         stage("git clone project url") {
             steps {
                 git url: 'https://github.com/sukumarr12/applogin.git'
-                sh "ls -all"        
-            }
-        }
-
-        stage("git clone ansible url") {
-            steps {
                 git url: 'https://github.com/sukumarr12/ansible1'
-                sh "ls -all"
+                sh "ls -all"   
             }
         }
 
