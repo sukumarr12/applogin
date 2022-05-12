@@ -4,20 +4,20 @@ pipeline {
 
     stages {
         
-        stage('git clone project url') {
+        stage("git clone project url") {
             steps {
                 git url: 'https://github.com/sukumarr12/applogin.git'
-                sh ""
+                sh "ls -all"
             }
         }
 
-        stage('git clone ansible url') {
+        stage("git clone ansible-url") {
             steps {
                 git url: "https://github.com/sukumarr12/ansible1"
                 sh "ls -all"
             }
             
-
+        
         stage('build') {
             steps {
                 sh "mvn clean install"
