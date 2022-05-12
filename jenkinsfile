@@ -11,11 +11,12 @@ pipeline {
             }
         }
 
-        stage('git clone ansible url')
+        stage('git clone ansible url') {
             steps {
                 git url: "https://github.com/sukumarr12/ansible1"
                 sh "ls -all"
             }
+            
 
         stage('build') {
             steps {
