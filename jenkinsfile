@@ -1,6 +1,6 @@
 properties([pipelineTriggers([githubPush()])])
 pipeline {
-    agent {label "sr777"}
+    agent any
 
     stages {
         
