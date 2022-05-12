@@ -1,4 +1,5 @@
 properties([pipelineTriggers([githubPush()])])
+
 pipeline {
     agent {label "sr777"}
 
@@ -59,7 +60,7 @@ pipeline {
 
         stage('deploy') {
             steps {
-                sh "ansible-playbook -i tom-host cd.yml"
+                sh "ansible-playbook -i /home/devops/ansible1/tom-host /home/devops/ansible1/cd.yml"
             }
         }
     }
